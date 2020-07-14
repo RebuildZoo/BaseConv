@@ -17,27 +17,26 @@ import loaders.ministLoader as mnstld
 import custom_utils.config as ut_cfg 
 import custom_utils.initializer as ut_init
 
-ROOT = r"D:\Documents\Git_Hub\RebuildZoo\BaseConv"
+ROOT = os.getcwd()
 class train_config(ut_cfg.config):
     def __init__(self):
-        super(train_config, self).__init__(pBs = 16, pWn = 2, p_force_cpu = False)
+        super(train_config, self).__init__(pBs = 32, pWn = 4, p_force_cpu = False)
         self.path_save_mdroot = self.check_path_valid(os.path.join(ROOT, "outputs"))
         localtime = time.localtime(time.time())
-        self.path_save_mdid = "convMNIST" + "%02d%02d"%(localtime.tm_mon, localtime.tm_mday)
+        self.path_save_mdid = "alexMNIST" + "%02d%02d"%(localtime.tm_mon, localtime.tm_mday)
 
-        self.save_epoch_begin = 20
-        self.save_epoch_interval = 10
+        self.save_epoch_begin = 50
+        self.save_epoch_interval = 25
 
         self.log_epoch_txt = open(os.path.join(self.path_save_mdroot, "conv_epoch_loss_log.txt"), 'a+')
         self.writer = SummaryWriter(log_dir=os.path.join(self.path_save_mdroot, "board"))
 
         self.height_in = 28
         self.width_in = 28
-        self.latent_num = 16*5*5
         self.class_num = 10
 
         self.method_init = "xavier" #"preTrain" #"kaming"#"xavier"
-        self.training_epoch_amount = 51
+        self.training_epoch_amount = 150
 
         self.dtroot = os.path.join(ROOT, "datasets")
 
@@ -62,7 +61,7 @@ class train_config(ut_cfg.config):
             imgUbyte_absfilename = r"datasets\MNIST\train-images-idx3-ubyte.gz"
             labelUbyte_absfilename = r"datasets\MNIST\train-labels-idx1-ubyte.gz"
         else:
-            imgUbyte_absfilename = r"datasets\MNIST\train-images-idx3-ubyte.gz"
+            imgUbyte_absfilename = r"datasets\MNIST\t10k-images-idx3-ubyte.gz"
             labelUbyte_absfilename = r"datasets\MNIST\t10k-labels-idx1-ubyte.gz"
         q_dataset = mnstld.minist_Loader(imgUbyte_absfilename, labelUbyte_absfilename)
 
@@ -191,7 +190,7 @@ if __name__ == "__main__":
                 {"avg_loss": avg_loss, 
                 },  epoch_i
             )
-            gm_cfg.log_in_board("validated acc", 
+            gm_cfg.log_in_board("vali-accuracy", 
                 {"avg_acc": avg_acc, 
                 },  epoch_i
             )

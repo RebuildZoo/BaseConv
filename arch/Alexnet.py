@@ -57,33 +57,33 @@ class AlexNet_mnist(nn.Module):
         super(AlexNet_mnist, self).__init__()
         # input size: 28 x 28
         self.features = nn.Sequential(
-            nn.Conv2d(in_channels, 64, kernel_size=5), # o = 24
+            nn.Conv2d(in_channels, 16, kernel_size=5), # o = 24
             nn.ReLU(inplace=True),
             nn.MaxPool2d(kernel_size=3, stride=2), # o = 11
 
-            nn.Conv2d(64, 192, kernel_size=3, padding=1), # o = 11
+            nn.Conv2d(16, 64, kernel_size=3, padding=1), # o = 11
             nn.ReLU(inplace=True),
             nn.MaxPool2d(kernel_size=3, stride=2), # o = 5
 
-            nn.Conv2d(192, 384, kernel_size=3, padding=1), # o= 5
+            nn.Conv2d(64, 128, kernel_size=3, padding=1), # o= 5
             nn.ReLU(inplace=True),
 
-            nn.Conv2d(384, 256, kernel_size=3, padding=1), # o= 5
+            nn.Conv2d(128, 64, kernel_size=3, padding=1), # o= 5
             nn.ReLU(inplace=True),
 
-            nn.Conv2d(256, 256, kernel_size=3, padding=1), # o = 5
+            nn.Conv2d(64, 32, kernel_size=3, padding=1), # o = 5
             nn.ReLU(inplace=True),
             nn.MaxPool2d(kernel_size=3, stride=1), # o = 3
         )
         self.avgpool = nn.AdaptiveAvgPool2d((3, 3))
         self.classifier = nn.Sequential(
             nn.Dropout(),
-            nn.Linear(256 * 3 * 3, 4096),
+            nn.Linear(32 * 3 * 3, 128),
             nn.ReLU(inplace=True),
             nn.Dropout(),
-            nn.Linear(4096, 1024),
+            nn.Linear(128, 64),
             nn.ReLU(inplace=True),
-            nn.Linear(1024, num_classes),
+            nn.Linear(64, num_classes),
         )
 
     def forward(self, x):
