@@ -1,7 +1,7 @@
 '''
 
 Adapt from Anaconda3\envs\point_learning\lib\site-packages\torchvision\models\alexnet.py
-
+import torchvision
 torchvision.models.alexnet
 '''
 

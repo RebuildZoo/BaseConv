@@ -7,7 +7,6 @@ import torchvision
 import torchvision.transforms as transforms
 
 import matplotlib.pyplot as plt 
-
 def view_tensor(p_img_Tsor):
     # p_img_Tsor = p_img_Tsor / 2 + 0.5     # unnormalize
     img_Arr = p_img_Tsor.numpy()
@@ -20,13 +19,22 @@ class ReverseColor(object):
         assert torch.max(img_Tsor) < 1.1 , "not a valid image tensor"
         return 1 - img_Tsor
 
+class AddGaussianNoise(object):
+    def __init__(self, mean=0., std=0.15):
+        self.std = std
+        self.mean = mean
+        
+    def __call__(self, tensor):
+        tensor += torch.randn(tensor.size()) * self.std + self.mean
+        return torch.clamp(tensor, min=0, max=1)
+
 class minist_Loader(torch.utils.data.Dataset):
     def __init__(self, pImgUbyte_absfilename, pLabelUbyte_absfilename, pTansfom = None):
         '''
         load the oringinal MNIST dataset from ubyte file
 
-        pImgUbyte_dir = D:\Documents\Git_Hub\RebuildZoo\BaseConv\datasets\MNIST\train-images-idx3-ubyte
-        pLabelUbyte_dir = D:\Documents\Git_Hub\RebuildZoo\BaseConv\datasets\MNIST\train-labels-idx1-ubyte
+        pImgUbyte_dir = datasets\MNIST\train-images-idx3-ubyte
+        pLabelUbyte_dir = datasets\MNIST\train-labels-idx1-ubyte
         '''
         assert os.path.isfile(pImgUbyte_absfilename), "invalid image ubyte file: " + pImgUbyte_absfilename
         assert os.path.isfile(pLabelUbyte_absfilename), "invalid label ubyte file: " + pLabelUbyte_absfilename
@@ -36,7 +44,8 @@ class minist_Loader(torch.utils.data.Dataset):
                 transforms.ToPILImage(), 
                 transforms.ColorJitter(brightness=0.5, contrast=0.5, saturation=0.5, hue=0.5), 
                 transforms.ToTensor(), # (0, 255) uint8 HWC-> (0, 1.0) float32 CHW
-                transforms.RandomApply([ReverseColor()])
+                transforms.RandomApply([ReverseColor()]), # AddGaussianNoise()
+                transforms.RandomApply([AddGaussianNoise()]),
                 ])
              
         else:
@@ -77,8 +86,8 @@ class minist_Loader(torch.utils.data.Dataset):
 
 if __name__ == "__main__":
 
-    imgUbyte_absfilename = r"D:\Documents\Git_Hub\RebuildZoo\BaseConv\datasets\MNIST\train-images-idx3-ubyte.gz"
-    labelUbyte_absfilename = r"D:\Documents\Git_Hub\RebuildZoo\BaseConv\datasets\MNIST\train-labels-idx1-ubyte.gz"
+    imgUbyte_absfilename = r"datasets\MNIST\train-images-idx3-ubyte.gz"
+    labelUbyte_absfilename = r"datasets\MNIST\train-labels-idx1-ubyte.gz"
 
 
     gm_dataset = minist_Loader(imgUbyte_absfilename, labelUbyte_absfilename)
