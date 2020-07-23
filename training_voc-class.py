@@ -19,7 +19,7 @@ import custom_utils.initializer as ut_init
 
 import loaders.vocLoader as vocld 
 
-from torchvision.models import GoogLeNet, ResNet
+from torchvision.models import ResNet, GoogLeNet
 
 ROOT = os.getcwd()
 class train_config(ut_cfg.config):
@@ -27,7 +27,7 @@ class train_config(ut_cfg.config):
         super(train_config, self).__init__(pBs = 32, pWn = 4, p_force_cpu = False)
         self.path_save_mdroot = self.check_path_valid(os.path.join(ROOT, "outputs"))
         localtime = time.localtime(time.time())
-        self.path_save_mdid = "alexVOC" + "%02d%02d"%(localtime.tm_mon, localtime.tm_mday)
+        self.path_save_mdid = "googleVOC" + "%02d%02d"%(localtime.tm_mon, localtime.tm_mday)
 
         self.save_epoch_begin = 50
         self.save_epoch_interval = 25
@@ -39,7 +39,7 @@ class train_config(ut_cfg.config):
         self.width_in = 512
         self.class_num = 20
 
-        self.method_init = "xavier" #"preTrain" #"kaming"#"xavier"
+        self.method_init = "self_define" #"preTrain" #"kaming"#"xavier"
         self.training_epoch_amount = 150
 
         self.dtroot = os.path.join(ROOT, "datasets")
@@ -142,11 +142,12 @@ if __name__ == "__main__":
 
     # prepare net
     # gm_net = GoogLeNet(num_classes = 20) # aux_logits = False
-    gm_net = torchvision.models.resnet50(num_classes = 20)
+    gm_net = torchvision.models.GoogLeNet(num_classes = 20)
     # ResNet(num_classes = 20) 
     # AlexNet_voc()
     
     gm_cfg.init_net(gm_net)
+    
 
     # optimizer & scheduler
     gm_optimizer = optim.Adam(

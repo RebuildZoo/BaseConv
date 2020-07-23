@@ -35,7 +35,7 @@ class config(object):
                 apex_str = 'with Apex '
             except:
                 apex_str = ''
-            
+            torch.cuda.empty_cache()
             torch.backends.cudnn.benchmark = True 
             c = 1024 ** 2  # bytes to MB
             ng = torch.cuda.device_count()
