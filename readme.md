@@ -1,7 +1,8 @@
 # CNN Archs in Classification Task
 
-# Multi-Class
+## Multi-Class
 
+### Data & Paras
 In order to objectively compare the performance of various SOTA network architectures, each of them uses the following benchmark conditions: 
 <!-- - **MNIST**; 10 categories, 60K, fixed size 1x 28 x28;  -->
 - **ISLVRC2012**(*The data for the classification and localization tasks will remain unchanged from 2012*) 1000 categories, 1.2M, resize/crop to 3 x 256 x 256;
@@ -22,8 +23,14 @@ In order to objectively compare the performance of various SOTA network architec
 | dense161 |                |            |   28,681,000  |
 | dense201 |                |            |   20,013,928  |
 
+### Criterion
 
-# Multi-Label
+- Use `nn.CrossEntropyLoss()` in training; 
+- Use maximum likelihood(top-1 error) in validating. 
+
+- ** top-5 error: If only one of the five categories predicted by an image is the same as the manual annotation category, it will be correct. 
+
+## Multi-Label
 
 
 
