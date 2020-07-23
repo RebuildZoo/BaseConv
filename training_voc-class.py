@@ -19,7 +19,7 @@ import custom_utils.initializer as ut_init
 
 import loaders.vocLoader as vocld 
 
-from torchvision.models import ResNet, GoogLeNet
+from torchvision.models import ResNet, GoogLeNet, AlexNet, VGG
 
 ROOT = os.getcwd()
 class train_config(ut_cfg.config):
@@ -39,7 +39,7 @@ class train_config(ut_cfg.config):
         self.width_in = 512
         self.class_num = 20
 
-        self.method_init = "self_define" #"preTrain" #"kaming"#"xavier"
+        self.method_init = "xavier" #"preTrain" #"kaming"#"xavier"
         self.training_epoch_amount = 150
 
         self.dtroot = os.path.join(ROOT, "datasets")
@@ -141,11 +141,11 @@ if __name__ == "__main__":
     ) # 1875 * 32
 
     # prepare net
-    # gm_net = GoogLeNet(num_classes = 20) # aux_logits = False
-    gm_net = torchvision.models.GoogLeNet(num_classes = 20)
+    gm_net = GoogLeNet(num_classes = 20) # aux_logits = False
+    # gm_net = torchvision.models.AlexNet(num_classes = 1000)
     # ResNet(num_classes = 20) 
     # AlexNet_voc()
-    
+
     gm_cfg.init_net(gm_net)
     
 

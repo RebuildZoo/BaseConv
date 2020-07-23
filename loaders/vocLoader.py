@@ -32,7 +32,7 @@ class voc2012_Classification_Loader(torch.utils.data.Dataset):
         if not pTansfom:
             self.transform = transforms.Compose([
                 # transforms.ToPILImage(), 
-                transforms.Resize((224, 224)), 
+                transforms.Resize((256, 256)), 
                 transforms.RandomHorizontalFlip(), 
                 transforms.ColorJitter(brightness=0.5, contrast=0.5, saturation=0.5, hue=0.5), 
                 transforms.ToTensor(), # (0, 255) uint8 HWC-> (0, 1.0) float32 CHW
