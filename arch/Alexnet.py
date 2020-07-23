@@ -93,12 +93,61 @@ class AlexNet_mnist(nn.Module):
         x = self.classifier(x)
         return x
 
+
+class AlexNet_voc(nn.Module):
+    def __init__(self, in_channels=3, num_classes=20):
+        super(AlexNet_voc, self).__init__()
+        # input size: 512 x 512
+        self.features = nn.Sequential(
+            nn.Conv2d(in_channels, 64, kernel_size=11, stride=4, padding=2), # o = 126
+            nn.ReLU(inplace=True),
+            nn.MaxPool2d(kernel_size=3, stride=2), # o = 62
+
+            nn.Conv2d(64, 192, kernel_size=5, padding=2), # o = 62
+            nn.ReLU(inplace=True),
+            nn.MaxPool2d(kernel_size=3, stride=2), # o = 30
+
+            nn.Conv2d(192, 384, kernel_size=3, padding=1), # o= 30
+            nn.ReLU(inplace=True),
+            nn.MaxPool2d(kernel_size=3, stride=2), # o = 14
+
+            nn.Conv2d(384, 256, kernel_size=3, padding=1), # o= 14
+            nn.ReLU(inplace=True),
+
+            nn.Conv2d(256, 256, kernel_size=3, padding=1), # o= 14
+            nn.ReLU(inplace=True),
+
+            nn.Conv2d(256, 128, kernel_size=3, padding=1), # o = 14
+            nn.ReLU(inplace=True),
+            nn.MaxPool2d(kernel_size=3, stride=2), # o = 6
+        )
+        self.avgpool = nn.AdaptiveAvgPool2d((6, 6))
+        self.classifier = nn.Sequential(
+            nn.Dropout(),
+            nn.Linear(128 * 6 * 6, 1024),
+            nn.ReLU(inplace=True),
+            nn.Dropout(),
+            nn.Linear(1024, 512),
+            nn.ReLU(inplace=True),
+            nn.Linear(512, num_classes),
+        )
+
+    def forward(self, x):
+        x = self.features(x)
+        x = self.avgpool(x)
+        x = torch.flatten(x, 1)
+        x = self.classifier(x)
+        return x
+
+
+
 if __name__ == "__main__":
     
-    in_Tsor = torch.randn(5, 1, 28, 28)
+    # in_Tsor = torch.randn(5, 1, 28, 28)
+    # t_net = AlexNet_mnist()
 
-    t_net = AlexNet_mnist()
-
+    in_Tsor = torch.randn(5, 3, 512, 512)
+    t_net = AlexNet_voc()
     out_Tsor = t_net(in_Tsor)
 
     print("output tensor shape: ", out_Tsor.shape)
