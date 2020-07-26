@@ -7,7 +7,9 @@ try:
     from torch.utils.tensorboard import SummaryWriter
 except ImportError:
     print("please pip install tensorboard==2.0.2")
-
+'''
+tensorboard --logdir outputs --port 8890
+'''
 import time 
 import os 
 import sys 
